@@ -33,9 +33,10 @@ const Page: React.FC = () => {
   } = theme.useToken();
 
   useEffect(() => {
-    axios.get('/api/games/')
+    axios.get('/games/')
       .then((res) => {
         setGames(res.data);
+        console.log(res.data);
       })
       .catch((err) => console.error(err));
   }, []);
