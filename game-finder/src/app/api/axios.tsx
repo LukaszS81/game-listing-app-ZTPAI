@@ -1,7 +1,7 @@
-import axios from "axios";
+// src/app/api/axios.tsx
+import axios from 'axios';
 
-const api = axios.create({
-  baseURL: "http://localhost:8000/api",
+export default axios.create({
+  baseURL: 'http://localhost:8000',   // <- backend
+  headers: { 'Content-Type': 'application/json' },
 });
-
-export default api;
