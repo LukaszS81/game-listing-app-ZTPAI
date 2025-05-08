@@ -1,5 +1,5 @@
 from rest_framework.decorators import api_view, permission_classes
-from rest_framework.permissions import AllowAny, IsAuthenticated
+from rest_framework.permissions import AllowAny, IsAuthenticated, IsAdminUser
 from rest_framework.response import Response
 from rest_framework import status
 
@@ -47,7 +47,7 @@ def register(request):
     ],
 )
 @api_view(['GET'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def list_games(request):
     title = request.query_params.get('title', '')
     genre = request.query_params.get('genre', '')
@@ -59,7 +59,7 @@ def list_games(request):
     operation_description="Szczegóły gry na podstawie ID.",
 )
 @api_view(['GET'])
-@permission_classes([AllowAny])
+@permission_classes([IsAuthenticated])
 def game_detail(request, game_id):
     game = get_game_details(game_id)
     return Response(game, status=status.HTTP_200_OK)
@@ -69,7 +69,7 @@ def game_detail(request, game_id):
     operation_description="Dodanie nowej gry (wymaga uwierzytelnienia).",
 )
 @api_view(['POST'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAdminUser])
 def create_game(request):
     game = create_new_game(request.data)
     return Response(game, status=status.HTTP_201_CREATED)
@@ -79,7 +79,7 @@ def create_game(request):
     operation_description="Aktualizacja danych gry (wymaga uwierzytelnienia).",
 )
 @api_view(['PATCH'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAdminUser])
 def update_game(request, game_id):
     game = update_existing_game(game_id, request.data)
     return Response(game, status=status.HTTP_200_OK)
@@ -89,7 +89,7 @@ def update_game(request, game_id):
     operation_description="Usunięcie gry (wymaga uwierzytelnienia).",
 )
 @api_view(['DELETE'])
-@permission_classes([IsAuthenticated])
+@permission_classes([IsAdminUser])
 def delete_game(request, game_id):
     delete_existing_game(game_id)
     return Response(status=status.HTTP_204_NO_CONTENT)

@@ -140,8 +140,6 @@ STATIC_URL = 'static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-CORS_ALLOW_ALL_ORIGINS = True
-
 REST_FRAMEWORK = {
     'EXCEPTION_HANDLER': 'gamesearch.utils.custom_exception_handler',
     'DEFAULT_AUTHENTICATION_CLASSES': (
@@ -153,5 +151,34 @@ SIMPLE_JWT = {
     "ACCESS_TOKEN_LIFETIME": timedelta(minutes=30),
     "REFRESH_TOKEN_LIFETIME": timedelta(days=7),
 }
+
+import os
+
+DATABASES = {
+    'default': {
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': os.getenv("DB_NAME"),
+        'USER': os.getenv("DB_USER"),
+        'PASSWORD': os.getenv("DB_PASSWORD"),
+        'HOST': os.getenv("DB_HOST"),
+        'PORT': os.getenv("DB_PORT", "5432"),
+    }
+}
+
+CORS_ALLOW_ALL_ORIGINS = True
+
+# Swagger JWT Auth (dla drf_yasg)
+SWAGGER_SETTINGS = {
+    'SECURITY_DEFINITIONS': {
+        'Bearer': {
+            'type': 'apiKey',
+            'name': 'Authorization',
+            'in': 'header',
+            'description': 'Wpisz: Bearer <twój_JWT_token>',
+        }
+    },
+    'USE_SESSION_AUTH': False,  # Wyłącz session-based auth
+}
+
 
 

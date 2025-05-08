@@ -17,11 +17,6 @@ type Game = {
   img?: string
 }
 
-const items1: MenuProps['items'] = ['1', '2', '3'].map((key) => ({
-  key,
-  label: `nav ${key}`,
-}))
-
 const Page: React.FC = () => {
   const router = useRouter()
   const [games, setGames] = useState<Game[]>([])
@@ -31,7 +26,7 @@ const Page: React.FC = () => {
     if (typeof window !== 'undefined') {
       const token = localStorage.getItem('access_token')
       if (!token) {
-        router.push('/register')
+        router.push('/login')
       }
     }
   }, [router])
@@ -52,11 +47,13 @@ const Page: React.FC = () => {
 
   useEffect(() => {
     axios
-      .get('/api/games/')
+      .get('/games/')
       .then((res) => {
         setGames(res.data)
       })
-      .catch((err) => console.error(err))
+      .catch((err) => {
+        console.error('Błąd pobierania gier:', err)
+      })
   }, [])
 
   const buildMenuItems = (games: Game[] = []) => {
@@ -82,13 +79,7 @@ const Page: React.FC = () => {
   return (
     <Layout style={{ minHeight: '100vh' }}>
       <Header style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
-        <Menu
-          theme="dark"
-          mode="horizontal"
-          defaultSelectedKeys={['2']}
-          items={items1}
-          style={{ flex: 1 }}
-        />
+        <Menu theme="dark" mode="horizontal" defaultSelectedKeys={['2']} items={[]} style={{ flex: 1 }} />
         <Button type="primary" onClick={handleLogout}>
           Wyloguj
         </Button>
@@ -99,7 +90,6 @@ const Page: React.FC = () => {
             mode="inline"
             onClick={onClick}
             selectedKeys={[current]}
-            defaultOpenKeys={['RPG', 'MMO']}
             style={{ height: '100%', borderRight: 0 }}
             items={items}
           />

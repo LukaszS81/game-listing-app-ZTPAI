@@ -15,9 +15,10 @@ Including another URLconf
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path, include, re_path
 from django.conf import settings
 from django.conf.urls.static import static
+
 from drf_yasg.views import get_schema_view
 from drf_yasg import openapi
 from rest_framework import permissions
@@ -38,17 +39,17 @@ urlpatterns = [
     path('api/docs/', schema_view.with_ui('swagger', cache_timeout=0), name='schema-swagger-ui'),
 ]
 
+# Obsługa błędów
 handler404 = 'games.views.custom_404_handler'
 handler500 = 'games.views.custom_500_handler'
 
+# Statyczne pliki
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
 
 if not settings.DEBUG:
-    from django.views.static import serve
-    from django.urls import re_path
-
     urlpatterns += [
         re_path(r'^static/(?P<path>.*)$', serve, {
             'document_root': settings.STATIC_ROOT,
         }),
     ]
+

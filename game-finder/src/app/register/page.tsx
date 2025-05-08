@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button, Form, Input, Alert } from 'antd'
-import axios from '../api/axios' // Upewnij się, że ścieżka jest poprawna
+import axios from '../api/axios' 
 
 const Register = () => {
   const router = useRouter()
@@ -18,16 +18,13 @@ const Register = () => {
     const token = localStorage.getItem('access_token')
     if (token) {
       router.push('/')
-    } else {
-      localStorage.removeItem('access_token')
-      localStorage.removeItem('refresh_token')
     }
   }, [router])
 
-  const onFinish = async (values: { username: string; password: string }) => {
+  const onFinish = async (values: { username: string; password: string; password2: string }) => {
     setError('')
     try {
-      await axios.post('/api/register/', values)
+      await axios.post('/register/', values)
       router.push('/login')
     } catch (err: any) {
       setError('Rejestracja nie powiodła się. Upewnij się, że dane są poprawne.')
@@ -46,12 +43,32 @@ const Register = () => {
           >
             <Input placeholder="Username" />
           </Form.Item>
+          
           <Form.Item
             label="Hasło"
             name="password"
             rules={[{ required: true, message: 'Wprowadź hasło' }]}
           >
             <Input.Password placeholder="Hasło" />
+          </Form.Item>
+
+          <Form.Item
+            label="Potwierdź hasło"
+            name="password2"
+            dependencies={['password']}
+            rules={[
+              { required: true, message: 'Potwierdź hasło' },
+              ({ getFieldValue }) => ({
+                validator(_, value) {
+                  if (!value || getFieldValue('password') === value) {
+                    return Promise.resolve()
+                  }
+                  return Promise.reject(new Error('Hasła nie są takie same'))
+                },
+              }),
+            ]}
+          >
+            <Input.Password placeholder="Potwierdź hasło" />
           </Form.Item>
 
           {error && <Alert message={error} type="error" showIcon className="mb-4" />}

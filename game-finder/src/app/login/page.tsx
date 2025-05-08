@@ -3,7 +3,7 @@
 import { useEffect, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import { Button, Form, Input, Alert } from 'antd'
-import axios from '../api/axios' // Upewnij się, że masz poprawny path
+import axios from '../api/axios' 
 
 const Login = () => {
   const router = useRouter()
@@ -19,7 +19,7 @@ const Login = () => {
   const onFinish = async (values: { username: string; password: string }) => {
     setError('')
     try {
-      const res = await axios.post('/api/token/', values)
+      const res = await axios.post('/token/', values)
       localStorage.setItem('access_token', res.data.access)
       localStorage.setItem('refresh_token', res.data.refresh)
       router.push('/')
