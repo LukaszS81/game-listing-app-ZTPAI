@@ -180,5 +180,6 @@ SWAGGER_SETTINGS = {
     'USE_SESSION_AUTH': False,  # Wyłącz session-based auth
 }
 
+CELERY_BROKER_URL = 'amqp://user:password@rabbitmq:5672//'
 
 
