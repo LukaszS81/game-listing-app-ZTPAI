@@ -28,6 +28,7 @@ services:
       - DB_PORT=5432
     depends_on:
       - db
+      - rabbitmq
     networks:
       - app-network
 
@@ -59,6 +60,19 @@ services:
       - db
     networks:
       - app-network
+
+  rabbitmq:
+    image: rabbitmq:3-management
+    container_name: rabbitmq
+    ports:
+      - "5672:5672"     # Port AMQP do komunikacji z Celery
+      - "15672:15672"   # Panel zarządzania RabbitMQ
+    environment:
+      RABBITMQ_DEFAULT_USER: user
+      RABBITMQ_DEFAULT_PASS: password
+    networks:
+      - app-network
+
 
 volumes:
   postgres_data:
