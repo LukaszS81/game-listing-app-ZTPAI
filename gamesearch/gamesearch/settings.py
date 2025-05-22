@@ -53,6 +53,7 @@ INSTALLED_APPS = [
     'games',
     'corsheaders',
     'drf_yasg',
+    'django_celery_results',
 ]
 
 MIDDLEWARE = [
@@ -180,6 +181,27 @@ SWAGGER_SETTINGS = {
     'USE_SESSION_AUTH': False,  # Wyłącz session-based auth
 }
 
-CELERY_BROKER_URL = 'amqp://user:password@rabbitmq:5672//'
+CELERY_BROKER_URL = 'amqp://guest:guest@rabbitmq:5672//'
+CELERY_RESULT_BACKEND = 'django-db'
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
 
+CELERY_TASK_QUEUES = {
+    'default': {
+        'exchange': 'default',
+        'exchange_type': 'direct',
+        'routing_key': 'default',
+    },
+    'game-tasks': {
+        'exchange': 'game',
+        'exchange_type': 'direct',
+        'routing_key': 'game-tasks',
+    },
+}
 
+CELERY_TASK_ROUTES = {
+    'games.tasks.notify_game_created': {
+        'queue': 'game-tasks',
+        'routing_key': 'game-tasks',
+    },
+}

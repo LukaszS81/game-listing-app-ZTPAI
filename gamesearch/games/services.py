@@ -21,13 +21,18 @@ def get_game_details(game_id):
     game = get_game_by_id(game_id)
     return GameSerializer(game).data
 
+from .tasks import notify_game_created
+
 def create_new_game(data):
     serializer = GameSerializer(data=data)
     serializer.is_valid(raise_exception=True)
     validated_data = serializer.validated_data
-    create_game(validated_data)
-    return serializer.data
+    game = create_game(validated_data)
+    
+    # WYWOŁANIE TASKA
+    notify_game_created.delay(validated_data['title'])
 
+    return serializer.data
 def update_existing_game(game_id, data):
     game = get_game_by_id(game_id)
     serializer = GameSerializer(game, data=data, partial=True)
