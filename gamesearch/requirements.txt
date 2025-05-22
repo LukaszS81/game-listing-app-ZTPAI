@@ -6,3 +6,5 @@ django-cors-headers==3.14.0
 drf_yasg==1.21.7
 djangorestframework-simplejwt
 django-cors-headers
+celery
+django-celery-results

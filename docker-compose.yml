@@ -61,6 +61,23 @@ services:
     networks:
       - app-network
 
+  celery:
+    build:
+      context: ./gamesearch
+    command: celery -A gamesearch worker --loglevel=info -Q game-tasks,default
+    volumes:
+      - ./gamesearch:/app
+    depends_on:
+      - backend
+      - rabbitmq
+    environment:
+      - DB_NAME=gamedb
+      - DB_USER=gameuser
+      - DB_PASSWORD=gamepass
+      - DB_HOST=db
+      - DB_PORT=5432
+    networks:
+      - app-network
   rabbitmq:
     image: rabbitmq:3-management
     container_name: rabbitmq
@@ -68,10 +85,11 @@ services:
       - "5672:5672"     # Port AMQP do komunikacji z Celery
       - "15672:15672"   # Panel zarządzania RabbitMQ
     environment:
-      RABBITMQ_DEFAULT_USER: user
-      RABBITMQ_DEFAULT_PASS: password
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
     networks:
       - app-network
+  
 
 
 volumes:
