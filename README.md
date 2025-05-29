@@ -3,7 +3,7 @@ Jak uruchomić projekt?
 2. Następnie wgrać go na VSC używając git clone https://github.com/LukaszS81/game-listing-app-ZTPAI.git 
 3. Gdy już się zgrało projekt wchodzimy do głównego katalogu, a następnie trzeba przejść do backendu(gamesearch) i pobrać plik requirements.txt używając komendy pip install -r requirements.txt
 4. Teraz trzeba odpalić dockera, a następnie wpisać docker-compose up --build w VSC
-5. Następnie gdy wszystko się już uruchomi trzeba dokonać migracji używając komendy docker-compose exec backend python manage.py shell
+5. Następnie gdy wszystko się już uruchomi trzeba dokonać migracji używając komendy docker-compose exec backend bash następnie python manage.py makemigrations oraz python manage.py migrate
 6. Teraz frontend jest dostępny pod adresem http://localhost:3000 backend API pod http://localhost:8000/api/ oraz swagger http://localhost:8000/api/docs/
 
 Użyte technologie:
