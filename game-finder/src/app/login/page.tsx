@@ -8,18 +8,30 @@ import axios from '../api/axios'
 const Login = () => {
   const router = useRouter()
   const [error, setError] = useState<string>('')
+  const [isAdmin, setIsAdmin] = useState(false);
 
   useEffect(() => {
-    const token = localStorage.getItem('access_token')
-    if (token) {
-      router.push('/')
-    }
-  }, [router])
+  const token = localStorage.getItem("access_token");
+  if (token) {
+    axios.get("http://localhost:8000/api/user-info/", {
+      headers: {
+        Authorization: `Bearer ${token}`
+      }
+    })
+    .then(res => {
+      if (res.data.is_staff) {
+        setIsAdmin(true);
+      }
+    })
+    .catch(err => console.error(err));
+  }
+}, []);
+
 
   const onFinish = async (values: { username: string; password: string }) => {
     setError('')
     try {
-      const res = await axios.post('/token/', values)
+      const res: any = await axios.post('/token/', values)
       localStorage.setItem('access_token', res.data.access)
       localStorage.setItem('refresh_token', res.data.refresh)
       router.push('/')
