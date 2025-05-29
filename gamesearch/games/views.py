@@ -75,9 +75,10 @@ def game_detail(request, game_id):
 @api_view(['POST'])
 @permission_classes([IsAdminUser])
 def create_game(request):
-    game = create_new_game(request.data)
+    game = create_new_game(request.data, request)  # przekazujemy request
     notify_game_created.apply_async(args=[game['title']], queue='game-tasks')
     return Response(game, status=status.HTTP_201_CREATED)
+
 
 # Edycja gry
 @swagger_auto_schema(
@@ -100,3 +101,13 @@ def update_game(request, game_id):
 def delete_game(request, game_id):
     delete_existing_game(game_id)
     return Response(status=status.HTTP_204_NO_CONTENT)
+
+@api_view(['GET'])
+@permission_classes([IsAuthenticated])
+def user_info(request):
+    user = request.user
+    return Response({
+        'username': user.username,
+        'is_staff': user.is_staff,
+        'is_superuser': user.is_superuser,
+    })

@@ -15,4 +15,5 @@ urlpatterns = [
     path('register/', views.register, name='register'),                          # POST: rejestracja użytkownika
     path('token/', TokenObtainPairView.as_view(), name='token_obtain_pair'),      # login
     path('token/refresh/', TokenRefreshView.as_view(), name='token_refresh'),     # odśwież token
+    path('user-info/', views.user_info, name='user-info'),
 ]
